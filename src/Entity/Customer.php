@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource]
+#[Post(security: "is_granted('IS_AUTHENTICATED_FULLY')")]
+#[GetCollection(security: "is_granted('IS_AUTHENTICATED_FULLY')")]
+#[Get(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
+#[Put(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
 class Customer
 {
     #[ORM\Id]
