@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource]
 #[Post(security: "is_granted('IS_AUTHENTICATED_FULLY')", processor: CustomerStateProcessor::class)]
-#[GetCollection(security: "is_granted('IS_AUTHENTICATED_FULLY')")]
+#[GetCollection(security: "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")]
 #[Get(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
 #[Put(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
 class Customer
