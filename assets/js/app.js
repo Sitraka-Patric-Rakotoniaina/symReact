@@ -16,7 +16,8 @@ const App = () => {
                 <Route path="/" Component={HomePage}></Route>
             </Routes>
         </main>
-    </HashRouter>)
+    </HashRouter>
+    )
 };
  const rootElement = document.querySelector('#app');
  ReactDOM.render(<App/>, rootElement);

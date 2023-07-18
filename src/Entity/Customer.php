@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
@@ -12,37 +13,48 @@ use App\State\CustomerStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ["groups" => ['customer:read']], paginationItemsPerPage: 10)]
 #[Post(security: "is_granted('IS_AUTHENTICATED_FULLY')", processor: CustomerStateProcessor::class)]
-#[GetCollection(security: "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")]
+#[GetCollection(security: "is_granted('PUBLIC_ACCESS')")]
 #[Get(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
 #[Put(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
+#[Delete]
 class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['customer:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['customer:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['customer:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['customer:read'])]
     private ?string $company = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class, orphanRemoval: true)]
+    #[Groups(['customer:read'])]
     private Collection $invoices;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
+    #[Groups(['customer:read'])]
     private ?User $user = null;
+    #[Groups(['customer:read'])]
+    private ?float $totalAmount = 0;
 
     public function __construct()
     {
@@ -142,5 +154,13 @@ class Customer
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getTotalAmount(): ?float
+    {
+        foreach ($this->getInvoices() as $invoice) {
+            $this->totalAmount = $this->totalAmount + $invoice->getAmount();
+        }
+        return $this->totalAmount;
     }
 }

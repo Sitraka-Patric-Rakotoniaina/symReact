@@ -1,7 +1,8 @@
 import React from "react";
 
 const Navbar = () => {
-    return (<nav className="navbar navbar-expand-lg bg-light" data-bs-theme="light">
+    return (
+        <nav className="navbar navbar-expand-lg bg-light" data-bs-theme="light">
             <div className="container-fluid">
                 <a className="navbar-brand" href="#">SymReact</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -31,6 +32,7 @@ const Navbar = () => {
                     </ul>
                 </div>
             </div>
-        </nav>)
+        </nav>
+    )
 }
 export default Navbar;
