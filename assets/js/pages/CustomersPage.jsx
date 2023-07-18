@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Pagination from "../components/Pagination";
 const CustomersPage = (props) => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1)
@@ -21,15 +22,8 @@ const CustomersPage = (props) => {
             })
     }
 
-    const itemsPerPage = 5;
-    const pagesCount = Math.ceil(customers.length / itemsPerPage);
-    const pages = [];
-    for (let i = 1; i <= pagesCount; i++) {
-        pages.push(i);
-    }
-
-    const start = currentPage * itemsPerPage - itemsPerPage;
-    const paginatedCustomers = customers.slice(start, start + itemsPerPage);
+    const itemsPerPage = 2;
+    const paginatedCustomers = Pagination.getData(customers, currentPage, itemsPerPage);
 
     const handleChangePage = (page) => {
         setCurrentPage(page);
@@ -68,21 +62,7 @@ const CustomersPage = (props) => {
                 </tr>)}
                 </tbody>
             </table>
-            <div>
-                <ul className="pagination pagination-sm">
-                    <li className={"page-item" + (currentPage === 1 && " disabled")}>
-                        <button className="page-link" onClick={() => handleChangePage(currentPage - 1)}>&laquo;</button>
-                    </li>
-                    {pages.map(page =>
-                        <li key={page} className={"page-item" + (currentPage === page && " active")}>
-                            <button className="page-link" onClick={() => handleChangePage(page)} >{page}</button>
-                        </li>
-                    )}
-                    <li className={"page-item" + (currentPage === pagesCount && " disabled")}>
-                        <button className="page-link" onClick={() => handleChangePage(currentPage + 1)}>&raquo;</button>
-                    </li>
-                </ul>
-            </div>
+            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length} onPageChanged={handleChangePage}/>
         </>
     )
 }
