@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "../components/Pagination";
+import {Link} from "react-router-dom";
 const CustomersPage = (props) => {
     const [customers, setCustomers] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         axios.get("http://127.0.0.1:8000/api/customers")
@@ -22,17 +24,32 @@ const CustomersPage = (props) => {
             })
     }
 
-    const itemsPerPage = 2;
-    const paginatedCustomers = Pagination.getData(customers, currentPage, itemsPerPage);
-
+    const itemsPerPage = 10;
     const handleChangePage = (page) => {
         setCurrentPage(page);
     }
 
+    const handleSearch = (event) => {
+        const value = event.currentTarget.value;
+        setSearch(value);
+    }
+
+    const filteredCustomers = customers.filter(
+        c => c.firstName.toLowerCase().includes(search.toLowerCase())
+        || c.lastName.toLowerCase().includes(search.toLowerCase())
+    );
+
+    console.log(filteredCustomers);
+
+    const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
+
     return (
         <>
-            <h1>Liste des clients</h1>
-            <table className="table table-hover">
+            <h3>Liste des clients</h3>
+            <div className="form-group">
+                <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..."/>
+            </div>
+            <table className="table table-hover mt-2">
                 <thead>
                 <tr>
                     <th>Id.</th>
@@ -62,7 +79,7 @@ const CustomersPage = (props) => {
                 </tr>)}
                 </tbody>
             </table>
-            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length} onPageChanged={handleChangePage}/>
+            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredCustomers.length} onPageChanged={handleChangePage}/>
         </>
     )
 }

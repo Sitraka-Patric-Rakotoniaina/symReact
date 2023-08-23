@@ -1,0 +1,7 @@
+api_platform:
+  # The title of the API.
+  title: 'SYM REACT API'
+  # The description of the API.
+  description: 'API description'
+  # The version of the API.
+  version: '1.0.0'

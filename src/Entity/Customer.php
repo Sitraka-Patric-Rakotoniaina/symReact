@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource(normalizationContext: ["groups" => ['customer:read']], paginationItemsPerPage: 10)]
 #[Post(security: "is_granted('IS_AUTHENTICATED_FULLY')", processor: CustomerStateProcessor::class)]
-#[GetCollection(security: "is_granted('PUBLIC_ACCESS')")]
+#[GetCollection(paginationEnabled: false, security: "is_granted('PUBLIC_ACCESS')")]
 #[Get(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
 #[Put(security: "is_granted('IS_AUTHENTICATED_FULLY') and (object.getUser() === user or is_granted('ROLE_ADMIN'))")]
 #[Delete]
