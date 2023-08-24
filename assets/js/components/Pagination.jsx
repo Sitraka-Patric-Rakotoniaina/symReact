@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 
-// <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length} onPageChanged={handleChangePage}/>
 const Pagination = ({currentPage, itemsPerPage, length, onPageChanged}) => {
     const pagesCount = Math.ceil(length / itemsPerPage);
 

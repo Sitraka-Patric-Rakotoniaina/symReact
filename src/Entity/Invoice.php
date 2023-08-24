@@ -42,6 +42,7 @@ class Invoice
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['invoice:read'])]
     private ?Customer $customer = null;
 
     #[ORM\Column]

@@ -27,6 +27,7 @@ const CustomersPage = (props) => {
             await CustomersAPI.delete(customerId);
         }catch (error){
             setCustomers(originalCustomers);
+            console.log(error)
         }
     }
 
@@ -45,8 +46,6 @@ const CustomersPage = (props) => {
             c.email.toLowerCase().includes(search.toLowerCase()) ||
             c.company.toLowerCase().includes(search.toLowerCase())
     );
-
-    console.log(filteredCustomers);
 
     const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
 
