@@ -6,6 +6,8 @@ import moment from "moment";
 const InvoicePage = () => {
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState('');
+
     const itemsPerPage = 10;
 
     const handleChangePage = (page) => setCurrentPage(page);
@@ -22,8 +24,6 @@ const InvoicePage = () => {
         fetchInvoice();
     }, [])
 
-    const paginatedInvoices = Pagination.getData(invoices, currentPage, itemsPerPage);
-
     const handleDelete = async (id)=> {
         const originalInvoices = [...invoices];
         setInvoices(invoices.filter(invoice => invoice.id !== id));
@@ -34,9 +34,27 @@ const InvoicePage = () => {
         }
     }
 
+    const handleSearch = (event) => {
+        let value = event.currentTarget.value;
+        setSearch(value);
+        setCurrentPage(1);
+    }
+
+    let filteredInvoices = invoices.filter(
+        i =>
+            i.customer.firstName.toLowerCase().includes(search.toLowerCase()) ||
+            i.customer.lastName.toLowerCase().includes(search.toLowerCase()) ||
+            i.sentAt.includes(search)
+    )
+
+    const paginatedInvoices = Pagination.getData(filteredInvoices, currentPage, itemsPerPage);
+
     return (
         <>
             <h3>Liste des factures</h3>
+            <div className="form-group">
+                <input type="text" className="form-control" placeholder="Rechercher" onChange={handleSearch}/>
+            </div>
             <table className="table table-hover mt-2">
                 <thead>
                 <tr>
@@ -64,10 +82,10 @@ const InvoicePage = () => {
                 </tr>)}
                 </tbody>
             </table>
-            {/*{itemsPerPage < filteredCustomers.length &&*/}
-            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={invoices.length}
-                            onPageChanged={handleChangePage}/>
-            {/*}*/}
+            {itemsPerPage < filteredInvoices.length &&
+                <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredInvoices.length}
+                                onPageChanged={handleChangePage}/>
+            }
         </>
     );
 }
