@@ -23,9 +23,9 @@ const CustomersPage = (props) => {
     const handleDelete = async (customerId) => {
         const originalCustomers = [...customers];
         setCustomers(customers.filter(customer => customer.id !== customerId))
-        try{
+        try {
             await CustomersAPI.delete(customerId);
-        }catch (error){
+        } catch (error) {
             setCustomers(originalCustomers);
             console.log(error)
         }

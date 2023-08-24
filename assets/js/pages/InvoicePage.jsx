@@ -10,6 +10,17 @@ const InvoicePage = () => {
 
     const itemsPerPage = 10;
 
+    const STATUS_CLASSES = {
+        PAID: "success",
+        SENT: 'primary',
+        CANCELED: 'danger'
+    }
+
+    const STATUS_LABELS = {
+        PAID: "Payée",
+        SENT: "Envoyée",
+        CANCELED: "Annulée"
+    }
     const handleChangePage = (page) => setCurrentPage(page);
     const fetchInvoice = async () => {
         try {
@@ -24,7 +35,7 @@ const InvoicePage = () => {
         fetchInvoice();
     }, [])
 
-    const handleDelete = async (id)=> {
+    const handleDelete = async (id) => {
         const originalInvoices = [...invoices];
         setInvoices(invoices.filter(invoice => invoice.id !== id));
         try {
@@ -44,7 +55,8 @@ const InvoicePage = () => {
         i =>
             i.customer.firstName.toLowerCase().includes(search.toLowerCase()) ||
             i.customer.lastName.toLowerCase().includes(search.toLowerCase()) ||
-            i.sentAt.includes(search)
+            i.amount.toString().startsWith(search.toLowerCase()) ||
+            STATUS_LABELS[i.status].toLowerCase().includes(search.toLowerCase())
     )
 
     const paginatedInvoices = Pagination.getData(filteredInvoices, currentPage, itemsPerPage);
@@ -58,21 +70,24 @@ const InvoicePage = () => {
             <table className="table table-hover mt-2">
                 <thead>
                 <tr>
-                    <th>Id.</th>
-                    <th>Montant</th>
-                    <th>Date</th>
+                    <th>Numéro</th>
                     <th>Client</th>
-                    <th className='text-center'>Statut</th>
+                    <th className="text-center">Date d'envoi</th>
+                    <th className="text-center">Statut</th>
+                    <th className="text-center">Montant</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {paginatedInvoices.map(invoice => <tr key={invoice.id}>
-                    <td>{invoice.id}</td>
-                    <td><a href="#">{invoice.amount.toLocaleString()}€</a></td>
-                    <td>{moment(invoice.sentAt).local('fr').format('DD/MM/YYYY')}</td>
-                    <td>{invoice.customer.firstName + ' ' + invoice.customer.lastName}</td>
-                    <td className='text-center'>{invoice.status}</td>
+                    <td>{invoice.chrono}</td>
+                    <td><a href="#">{invoice.customer.firstName + ' ' + invoice.customer.lastName}</a></td>
+                    <td className="text-center">{moment(invoice.sentAt).local('fr').format('DD/MM/YYYY')}</td>
+                    <td className="text-center">
+                        <span
+                            className={"badge bg-" + STATUS_CLASSES[invoice.status]}>{STATUS_LABELS[invoice.status]}</span>
+                    </td>
+                    <td className="text-center">{invoice.amount.toLocaleString()}€</td>
                     <td>
                         <button
                             onClick={() => handleDelete(invoice.id)}
@@ -84,7 +99,7 @@ const InvoicePage = () => {
             </table>
             {itemsPerPage < filteredInvoices.length &&
                 <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredInvoices.length}
-                                onPageChanged={handleChangePage}/>
+                            onPageChanged={handleChangePage}/>
             }
         </>
     );
