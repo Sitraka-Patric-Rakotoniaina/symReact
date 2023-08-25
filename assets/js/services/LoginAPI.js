@@ -19,7 +19,7 @@ function logout() {
 function setUp() {
     const token = window.localStorage.getItem('authToken');
     if (token) {
-        if (token.exp < (new Date()).getTime()) {
+        if (token.exp * 1000 < new Date().getTime()) {
             logout();
         } else {
             axios.defaults.headers['Authorization'] = 'Bearer ' + token;
