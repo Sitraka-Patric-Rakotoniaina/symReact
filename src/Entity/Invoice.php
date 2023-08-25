@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 #[ApiResource(normalizationContext: ['groups' => 'invoice:read'])]
-#[GetCollection(paginationEnabled: false, security: "is_granted('PUBLIC_ACCESS')")]
+#[GetCollection(paginationEnabled: false, security: "is_granted('IS_AUTHENTICATED_FULLY')")]
 #[Get]
 #[Put]
 #[Delete]

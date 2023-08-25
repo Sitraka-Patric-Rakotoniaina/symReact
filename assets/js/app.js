@@ -6,13 +6,17 @@ import HomePage from "./pages/HomePage";
 import {HashRouter, Routes, Route} from "react-router-dom";
 import CustomersPage from "./pages/CustomersPage";
 import InvoicePage from "./pages/InvoicePage";
+import {LoginPage} from "./pages/LoginPage";
+import LoginAPI from "./services/LoginAPI";
 
+LoginAPI.setUp();
 const App = () => {
     return (
     <HashRouter>
         <Navbar />
         <main className="container mt-3">
             <Routes>
+                <Route path="/login" Component={LoginPage}></Route>
                 <Route path="/customers" Component={CustomersPage}></Route>
                 <Route path="/invoices" Component={InvoicePage}></Route>
                 <Route path="/" Component={HomePage}></Route>
